@@ -1,0 +1,24 @@
+<ion-view title="{{workout.name}}">
+  <ion-nav-buttons side="right">
+    <button menu-toggle="right" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content class="has-header">
+    <ion-list>
+      <ion-item ng-repeat="exercise in workout.exercises" class="small-list">
+        <div class="row">
+          <div class="col col-25">
+            {{exercise.cat}}
+          </div>
+          <div class="col col-50">
+            {{exercise.name}}
+          </div>
+          <div class="col col-25">
+            {{Math.floor(exercise.dur/60)}}:{{exercise.dur%60}}
+          </div>
+        </div>
+      </ion-item>
+    </ion-list>
+    <a href="#/app/workouts/{{workout.id}}/edit" class="button button-full button-assertive">Edit This Workout!</a>
+    <a href="#/app/workouts/{{workout.id}}/play" class="button button-full button-balanced">Play This Workout!</a>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,41 @@
+<div class="modal" ng-controller="NewExerciseCtrl">
+  <ion-header-bar>
+    <h1 class="title">New Exercise</h1>
+  </ion-header-bar>
+  <ion-content>
+    <form ng-submit="addEditExercise()">
+      <div class="list">
+        <label class="item item-input item-select">
+          <span class="input-label">Type:</span>
+          <select ng-model="newExercise.exercise.cat" ng-change="changeCat()">
+            <option selected>Exercise</option>
+            <option>Rest</option>
+          </select>
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Name</span>
+          <input type="text" ng-model="newExercise.exercise.name" ng-readonly="newExercise.readOnly">
+        </label>
+        <div class="row">
+          <label class="item item-input">
+            <span class="input-label">Minutes</span>
+            <input type="number" ng-model="newExercise.exercise.dur.minutes">
+          </label>
+          <label class="item item-input">
+            <span class="input-label">Seconds</span>
+            <input type="number" ng-model="newExercise.exercise.dur.seconds">
+          </label>
+        </div>
+        <div class="row">
+          <div class="col col-50">
+            <button class="button button-block button-positive" type="submit">Add Exercise</button>
+          </div>
+          <div class="col col-50">
+            <button class="button button-block button-assertive" type="button" ng-click="closeModal()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ion-content>
+</div>
+

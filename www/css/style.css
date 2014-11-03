@@ -1,0 +1,23 @@
+.centered {
+  text-align: center;
+}
+
+h6 {
+  color: #797979;
+}
+
+.no-top-margin {
+  margin: auto !important;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.row .col {
+  padding: 0;
+}
+
+.small-list {
+  padding: 5px !important;
+}

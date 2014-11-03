@@ -1,0 +1,20 @@
+<ion-view title="{{workout.name}}">
+  <ion-nav-buttons side="right">
+    <button menu-toggle="right" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content class="has-header" style="background-color: {{bgColor}}">
+    <div class="row centered">
+      <h6 class="col col-25">{{prevExercise}}</h6>
+      <h3 class="col col-50">{{currentExercise.name}}</h3>
+      <h6 class="col col-25">{{nextExercise}}</h6>
+    </div>
+    <div class="row centered">
+      <div class="col"><h1>{{Math.floor(totalMilSecs/60000)}}:{{pad(Math.ceil(totalMilSecs%60000/1000))}}</h1></div>
+    </div>
+    <div class="button-bar">
+      <button class="button icon ion-skip-backward" ng-click="skipBack()"></button>
+      <button class="button icon {{startPause}}" ng-click="spFunc()"></button>
+      <button class="button icon ion-skip-forward" ng-click="skipForward()"></button>
+    </div>
+  </ion-content>
+</ion-view>

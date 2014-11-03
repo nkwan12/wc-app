@@ -1,0 +1,43 @@
+<ion-view title="{{title}}">
+  <ion-nav-buttons side="right">
+    <button menu-toggle="right" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content class="has-header">
+    <form>
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Workout Name:</span>
+        <input type="text" ng-model="workout.name">
+      </label>
+      <h4 class="assertive padding-left"><strong>{{msg}}</strong></h4>
+      <ion-list>
+        <ion-item ng-repeat="exercise in exercises" class="small-list">
+          <div class="row">
+            <div class="col col-10">
+              <p>{{exercise.cat.charAt(0)}}</p>
+            </div>
+            <div class="col">
+              <p>{{exercise.name}}</p>
+            </div>
+            <div class="col col-20">
+              <p>{{exercise.dur.minutes}}:{{exercise.dur.seconds}}</p>
+            </div>
+            <div class="col col-10">
+              <button class="button button-royal button-small button-block no-top-margin" ng-click="mvExercise($index, -1)"><span class="icon ion-arrow-up-b"></span></button>
+            </div>
+            <div class="col col-10">
+              <button class="button button-royal button-small button-block no-top-margin" ng-click="mvExercise($index, 1)"><span class="icon ion-arrow-down-b"></span></button>
+            </div>
+            <div class="col col-10">
+              <button class="button button-balanced button-small button-block no-top-margin" ng-click="editExercise($index)"><span class="icon ion-edit"></span></button>
+            </div>
+            <div class="col col-10">
+              <button class="button button-assertive button-small button-block no-top-margin" ng-click="rmExercise($index)"><span class="icon ion-trash-a"></span></button>
+            </div>
+          </div>
+        </ion-item>
+      </ion-list>
+      <button class="button button-block button-dark" ng-click="createExercise()">Add Exercise</button>
+      <button class="button button-block button-positive" ng-click="submit(form)">Submit</button>
+    </form>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,13 @@
+<ion-view title="Workouts">
+  <ion-nav-buttons side="right">
+    <button menu-toggle="right" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content class="has-header">
+    <h4 class="assertive padding-left" ng-class="workoutsMsgClass">{{msg}}</h4>
+    <ion-list>
+      <ion-item ng-repeat="workout in workouts" href="#/app/workouts/{{workout.id}}">
+        {{workout.name}}
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

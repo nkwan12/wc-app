@@ -1,0 +1,30 @@
+<div class="modal" ng-controller="LoginCtrl">
+  <ion-header-bar>
+    <h1 class="title">Login</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeLogin()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form ng-submit="login()">
+      <div class="list">
+        <div class="assertive padding-left">{{msg}}</div>
+        <label class="item item-input">
+          <span class="input-label">Email</span>
+          <input type="email" ng-model="user.email">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Password</span>
+          <input type="password" ng-model="user.password">
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit">Log in <span class="icon ion-loading-a" ng-class="loadingClass"></span></button>
+        </label>
+      </div>
+    </form>
+    <div class="padding-right" align="right">
+      <a class="positive" ng-click="forgotPassword()">Forgot Password?</a>
+    </div>
+  </ion-content>
+</div>
+

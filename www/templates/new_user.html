@@ -1,0 +1,31 @@
+<div class="modal" ng-controller="SignUpCtrl">
+  <ion-header-bar>
+    <h1 class="title">Signup</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeModal()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form ng-submit="submit()">
+      <div class="list">
+        <div class="assertive padding-left">{{msg}}</div>
+        <label class="item item-input">
+          <span class="input-label">Email</span>
+          <input type="email" ng-model="newUser.email">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Password</span>
+          <input type="password" ng-model="newUser.password">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Confirm Password</span>
+          <input type="password" ng-model="newUser.passwordConfirmation">
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit">Sign Up <span class="icon ion-loading-a" ng-class="loadingClass"></span></button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</div>
+

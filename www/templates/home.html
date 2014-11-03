@@ -1,0 +1,9 @@
+<ion-view title="Home">
+  <ion-nav-buttons side="right">
+    <button menu-toggle="right" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content class="has-header">
+    <p>Welcome to my app</p>
+    <a ng-repeat="button in buttons" class="button button-block button-dark" href="{{button.link}}" ng-click="{{button.click}}">{{button.name}}</a>
+  </ion-content>
+</ion-view>
