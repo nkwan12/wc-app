@@ -1,6 +1,6 @@
 angular.module('wc.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, AuthenticationService, Global) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, AuthenticationService, Global, $state, $stateParams) {
   
   $ionicModal.fromTemplateUrl('templates/login.html', function(modal) {
     $scope.loginModal = modal;
@@ -30,10 +30,14 @@ angular.module('wc.controllers', [])
     $scope.loginModal.show();
   };
 
-  $scope.$on("$destroy", function() {
+  $scope.pad = function(t) {
+    return t >= 10? t : "0" + t;
+  };
+
+/*  $scope.$on("$destroy", function() {
     $scope.loginModal.remove();
   });
-
+*/
   $scope.logout = function() {
     AuthenticationService.logout();
   };
@@ -59,11 +63,19 @@ angular.module('wc.controllers', [])
     }
   };
 
+  $scope.$on("event:auth-token-valid", function() {
+    $state.transitionTo($state.current, $stateParams, {
+      reload: true,
+      inherit: false,
+      notify: true
+    });
+  });
+
 
 
 })
 
-.controller("HomeCtrl", function($scope, $ionicModal, Global) {
+.controller("HomeCtrl", function($scope, $ionicModal, Global, $state, $stateParams) {
   $scope.buttons = [];
   $scope.setButtons = function() {
     if (Global.userSession.loggedIn) {
@@ -96,9 +108,10 @@ angular.module('wc.controllers', [])
     $scope.setButtons();
   });
 
-  $scope.$on("$destroy", function() {
+/*  $scope.$on("$destroy", function() {
     $scope.signUpModal.remove();
   });
+*/
 })
 
 .controller("LoginCtrl", function($scope, $state, AuthenticationService, $stateParams) {
@@ -195,21 +208,31 @@ angular.module('wc.controllers', [])
     $scope.newUser.passwordConfirmation = null;
   };
 })
-.controller("PasswordResetCtrl", function($scope, AuthenticationService) {
+.controller("PasswordResetCtrl", function($scope, AuthenticationService, $ionicPopup) {
   $scope.loadingClass = "hidden";
   $scope.user = {email: null}
   var emailNotFoundMsg = "No account with that email address was found.";
   var successMsg = "Password email successfully sent.";
   var failureMsg = "An error has occurred. Please try again."
   $scope.msg = "";
+  var passwordResetSuccess = function() {
+    var successPopup = $ionicPopup.alert({
+      title: "Password Reset Email Sent",
+      template: "Please be patient, the email may take a few minutes to appear in your inbox"
+    });
+    successPopup.then(function() {
+    })
+  };
   $scope.$on("event:auth-password-reset-not-found", function() {
     $scope.msg = emailNotFoundMsg;
+    $scope.loadingClass = "hidden";
     $scope.user.email = null;
   });
   $scope.$on("event:auth-password-reset-success", function() {
-    $scope.msg = successMsg;
     $scope.successClass = "hidden";
     $scope.user.email = null;
+    $scope.forgotPasswordModal.hide();
+    passwordResetSuccess();
   });
   $scope.$on("event:auth-password-reset-failure", function() {
     $scope.msg = failureMsg;
@@ -266,7 +289,9 @@ angular.module('wc.controllers', [])
       animation: "slide-in-up",
     }
   );
-  var emptyMsg = "No exercises in this workout yet!"
+  var emptyMsg = "No exercises in this workout yet!";
+  var noNameMsg = "You must give this workout a name!";
+  var noExercisesMsg = "You must add at least one exercise before continuing!";
   $scope.msg = emptyMsg;
   $scope.newExercise = {
     exercise: {name: "", cat: "Exercise", dur: { minutes: 0, seconds: 0 }},
@@ -274,7 +299,7 @@ angular.module('wc.controllers', [])
     action: "create",
     readOnly: false
   };
-  $scope.workout = {name: null, private: null};
+  $scope.workout = {name: "", private: null};
   $scope.exercises = [];
   $scope.createExercise = function() {
     $scope.newExercise.action = "create";
@@ -294,18 +319,26 @@ angular.module('wc.controllers', [])
 
   $scope.mvExercise = function(index, change) {
     var newIndex = index + change;
-    if (!((newIndex < 0) || (newIndex > $scope.exercises.length))) {
+    if (!((newIndex < 0) || (newIndex > ($scope.exercises.length -1)))) {
+      console.log("New Index: " + newIndex);
+      console.log("Length: " + $scope.exercises.length);
       var temp = $scope.exercises[newIndex];
       $scope.exercises[newIndex] = $scope.exercises[index];
       $scope.exercises[index] = temp;
-    }
+    };
   };
 
   $scope.submit = function() {
-    Workout.create($scope.workout, $scope.exercises).then(function(data) {
-      Global.userSession.workoutId = data;
-      $state.go("app.workout", {workoutId: data}, {reload: true, inherit: false});
-    });
+    if ($scope.workout.name == "") {
+      $scope.msg = noNameMsg;
+    } else if ($scope.exercises[0] == null) {
+      $scope.msg = noExercisesMsg;
+    } else {
+      Workout.create($scope.workout, $scope.exercises).then(function(data) {
+        Global.userSession.workoutId = data;
+        $state.go("app.workout", {workoutId: data}, {reload: true, inherit: false});
+      });
+    };
   };
 
   $scope.$on("$destroy", function() {
@@ -388,10 +421,16 @@ angular.module('wc.controllers', [])
     $scope.checkMsg();
   });
   $scope.submit = function() {
-    Workout.edit($scope.workout, $scope.exercises, $stateParams.workoutId).then(function(data) {
-      Global.userSession.workoutId = data;
-      $state.go("app.workout", {workoutId: data}, {reload: true, inherit: false});
-    });
+    if ($scope.workout.name == "") {
+      $scope.msg = noNameMsg;
+    } else if ($scope.exercises[0] == null) {
+      $scope.msg = noExercisesMsg;
+    } else {
+      Workout.edit($scope.workout, $scope.exercises, $stateParams.workoutId).then(function(data) {
+        Global.userSession.workoutId = data;
+        $state.go("app.workout", {workoutId: data}, {reload: true, inherit: false});
+      });
+    };
   };
   $scope.$on("$destroy", function() {
     $scope.exerciseModal.remove();
@@ -399,21 +438,29 @@ angular.module('wc.controllers', [])
 })
 
 .controller("NewExerciseCtrl", function($scope, $state) {
+  $scope.exerciseMsg = "";
   $scope.closeModal = function() {
     $scope.exerciseModal.hide();
     $scope.newExercise.exercise = {name: "", cat: "Exercise", dur: { minutes: 0, seconds: 0 }};
     $scope.newExercise.readOnly = false;
   };
   $scope.addEditExercise = function() {
-    if ($scope.newExercise.action == "create") { 
-      $scope.exercises.push($scope.newExercise.exercise);
+    if (($scope.newExercise.exercise.dur.minutes == 0) && ($scope.newExercise.exercise.dur.seconds == 0)) {
+      $scope.exerciseMsg = "The length of the exercise cannot be zero!";
+    } else if ($scope.newExercise.exercise.name == "") {
+      $scope.exerciseMsg = "Please give this exercise a name!";
     } else {
-      $scope.exercises[$scope.newExercise.index] = $scope.newExercise.exercise;
+      $scope.exerciseMsg = "";
+      if ($scope.newExercise.action == "create") { 
+        $scope.exercises.push($scope.newExercise.exercise);
+      } else {
+        $scope.exercises[$scope.newExercise.index] = $scope.newExercise.exercise;
+      };
+      $scope.checkMsg();
+      $scope.exerciseModal.hide();
+      $scope.newExercise.exercise = {name: "", cat: "Exercise", dur: { minutes: 0, seconds: 0 }};
+      $scope.newExercise.readOnly = false;
     };
-    $scope.checkMsg();
-    $scope.exerciseModal.hide();
-    $scope.newExercise.exercise = {name: "", cat: "Exercise", dur: { minutes: 0, seconds: 0 }};
-    $scope.newExercise.readOnly = false;
   };
   $scope.changeCat = function() {
     if ($scope.newExercise.exercise.cat == "Exercise") {
@@ -426,7 +473,7 @@ angular.module('wc.controllers', [])
   };
 })
 
-.controller("PlayWorkoutCtrl", function($scope, $stateParams, $interval, Workout) {
+.controller("PlayWorkoutCtrl", function($scope, $stateParams, $interval, Workout, $cordovaVibration, $insomnia) {
   $scope.workout = null;
   var exerciseIndex = 0;
   var timer = null;
@@ -457,7 +504,8 @@ angular.module('wc.controllers', [])
   };
 
   $scope.startTimer = function() {
-    timer = $interval(decrement, 100);
+    timer = $interval(decrement, 1000);
+    $insomnia.keepAwake(); //disable for computer testing
     if ($scope.currentExercise.cat == "Exercise") {
       $scope.bgColor = "red";
     } else {
@@ -469,6 +517,7 @@ angular.module('wc.controllers', [])
 
   $scope.pauseTimer = function() {
     $interval.cancel(timer);
+    $insomnia.allowSleepAgain(); //disable for computer testing
     timer = null;
     $scope.bgColor = "blue";
     $scope.startPause = "ion-play";
@@ -486,26 +535,27 @@ angular.module('wc.controllers', [])
   };
 
   var decrement = function() {
-    $scope.totalMilSecs -= 100;
+    $scope.totalMilSecs -= 1000;
     if ($scope.totalMilSecs <= 0) {
       nextExercise();
     };
   };
 
   var nextExercise = function() {
+    if ($scope.workout.exercises[++exerciseIndex]) {
+      $scope.currentExercise = $scope.workout.exercises[exerciseIndex];
+      $scope.totalMilSecs = $scope.currentExercise.dur * 1000;
+      $cordovaVibration.vibrate([100,100,100,100,100,100,100,100,100]); //disable this line for testing on computer
+    } else {
+      $interval.cancel(timer);
+      endWorkout();
+    }
     if (timer) {
       if ($scope.currentExercise.cat == "Exercise") {
         $scope.bgColor = "red";
       } else {
         $scope.bgColor = "green";
       }
-    }
-    if ($scope.workout.exercises[++exerciseIndex]) {
-      $scope.currentExercise = $scope.workout.exercises[exerciseIndex];
-      $scope.totalMilSecs = $scope.currentExercise.dur * 1000;
-    } else {
-      $interval.cancel(timer);
-      endWorkout();
     }
     setPrevNext();
   };
@@ -521,10 +571,6 @@ angular.module('wc.controllers', [])
     setPrevNext();
   };
   
-  $scope.pad = function(t) {
-    return t >= 10? t : "0" + t;
-  };
-
   var endWorkout = function() {
   };
   

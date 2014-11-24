@@ -8,7 +8,7 @@ globalVars.factory("Global", function() {
       workoutId: null
     },
 
-    domain: "http://54.68.194.217",//"54.68.194.217","http://fast-taiga-4105.herokuapp.com",
+    domain: "http://54.148.0.117",//"54.68.194.217","http://fast-taiga-4105.herokuapp.com",
     workoutIds: []    
   };
 
@@ -105,6 +105,7 @@ authServs.factory("AuthenticationService", function($rootScope, $http, authServi
       .success(function(data, status, headers, config) {
         Global.userSession.loggedIn = true;
         Global.userSession.userId = data.userId;
+        $rootScope.$broadcast("event:auth-token-valid");
       })
       .error(function(data, status, headers, config) {
         Global.userSession.loggedIn = false;

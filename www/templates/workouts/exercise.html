@@ -5,6 +5,7 @@
   <ion-content>
     <form ng-submit="addEditExercise()">
       <div class="list">
+        <div class="assertive padding-left">{{exerciseMsg}}</div>
         <label class="item item-input item-select">
           <span class="input-label">Type:</span>
           <select ng-model="newExercise.exercise.cat" ng-change="changeCat()">
@@ -19,16 +20,16 @@
         <div class="row">
           <label class="item item-input">
             <span class="input-label">Minutes</span>
-            <input type="number" ng-model="newExercise.exercise.dur.minutes">
+            <input type="number" ng-model="newExercise.exercise.dur.minutes" select-on-click>
           </label>
           <label class="item item-input">
             <span class="input-label">Seconds</span>
-            <input type="number" ng-model="newExercise.exercise.dur.seconds">
+            <input type="number" ng-model="newExercise.exercise.dur.seconds" select-on-click>
           </label>
         </div>
         <div class="row">
           <div class="col col-50">
-            <button class="button button-block button-positive" type="submit">Add Exercise</button>
+            <button class="button button-block button-positive" type="submit">Save</button>
           </div>
           <div class="col col-50">
             <button class="button button-block button-assertive" type="button" ng-click="closeModal()">Cancel</button>

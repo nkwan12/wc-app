@@ -4,7 +4,7 @@
   </ion-nav-buttons>
   <ion-content class="has-header">
     <form>
-      <label class="item item-input item-stacked-label">
+      <label class="item item-input">
         <span class="input-label">Workout Name:</span>
         <input type="text" ng-model="workout.name">
       </label>
@@ -19,7 +19,7 @@
               <p>{{exercise.name}}</p>
             </div>
             <div class="col col-20">
-              <p>{{exercise.dur.minutes}}:{{exercise.dur.seconds}}</p>
+              <p>{{exercise.dur.minutes}}:{{pad(exercise.dur.seconds)}}</p>
             </div>
             <div class="col col-10">
               <button class="button button-royal button-small button-block no-top-margin" ng-click="mvExercise($index, -1)"><span class="icon ion-arrow-up-b"></span></button>
@@ -36,8 +36,8 @@
           </div>
         </ion-item>
       </ion-list>
-      <button class="button button-block button-dark" ng-click="createExercise()">Add Exercise</button>
-      <button class="button button-block button-positive" ng-click="submit(form)">Submit</button>
+      <button class="button button-block button-dark" ng-click="createExercise()">Add Exercise/Rest</button>
+      <button class="button button-block button-positive" ng-click="submit(form)">Save</button>
     </form>
   </ion-content>
 </ion-view>

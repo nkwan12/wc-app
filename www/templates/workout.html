@@ -13,7 +13,7 @@
             {{exercise.name}}
           </div>
           <div class="col col-25">
-            {{Math.floor(exercise.dur/60)}}:{{exercise.dur%60}}
+            {{Math.floor(exercise.dur/60)}}:{{pad(exercise.dur%60)}}
           </div>
         </div>
       </ion-item>

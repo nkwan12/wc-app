@@ -21,3 +21,39 @@ h6 {
 .small-list {
   padding: 5px !important;
 }
+.spacer {
+  height: 20px;
+  background-color: #00aed7;
+}
+
+ion-content.sidemenu, ion-content.sidemenu .list{
+  top: 20px;
+  background-color: #5B6166 !important;
+}
+ion-content.sidemenu .scroll-content, ion-content.sidemenu .list .scroll-content {
+  background-color: #5B6166 !important;
+}
+
+.sidemenu .item {
+  border-color: gray;
+  background-color: #5B6166 !important;
+}
+
+.sidemenu .item a {
+  background-color: #5B6166 !important;
+  color: #FFF;
+}
+
+.sidemenu .item.item-divider {
+  border-color: transparent;
+  height: 100px;
+  background-color: #808A8F;
+}
+
+ion-side-menu header {
+  background-color: #5B6166 !important;
+}
+
+ion-side-menu header h1 {
+  color: #FFF !important;
+}
