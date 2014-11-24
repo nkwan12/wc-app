@@ -7,13 +7,13 @@
       <ion-item ng-repeat="exercise in workout.exercises" class="small-list">
         <div class="row">
           <div class="col col-25">
-            {{exercise.cat}}
+            <p>{{exercise.cat}}</p>
           </div>
           <div class="col col-50">
-            {{exercise.name}}
+            <p>{{exercise.name}}</p>
           </div>
           <div class="col col-25">
-            {{Math.floor(exercise.dur/60)}}:{{pad(exercise.dur%60)}}
+            <p>{{Math.floor(exercise.dur/60)}}:{{pad(exercise.dur%60)}}</p>
           </div>
         </div>
       </ion-item>

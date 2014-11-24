@@ -480,6 +480,10 @@ angular.module('wc.controllers', [])
   $scope.startPause = "ion-play";
   $scope.bgColor = "blue";
 
+  $scope.$on("$stateChangeStart", function() {
+    $scope.pauseTimer();
+  });
+
   $scope.workout = Workout.get($stateParams.workoutId).then(function(data, status, headers, config) {
     $scope.workout = data.workout;
     $scope.workout.exercises = data.exercises;
@@ -545,7 +549,7 @@ angular.module('wc.controllers', [])
     if ($scope.workout.exercises[++exerciseIndex]) {
       $scope.currentExercise = $scope.workout.exercises[exerciseIndex];
       $scope.totalMilSecs = $scope.currentExercise.dur * 1000;
-      $cordovaVibration.vibrate([100,100,100,100,100,100,100,100,100]); //disable this line for testing on computer
+      $cordovaVibration.vibrate([100,100,100,100,100]); //disable this line for testing on computer
     } else {
       $interval.cancel(timer);
       endWorkout();

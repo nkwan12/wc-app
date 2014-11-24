@@ -3,16 +3,18 @@
     <button menu-toggle="right" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
   <ion-content class="has-header" style="background-color: {{bgColor}}">
-    <div class="row centered padding-top padding-bottom">
-      <div class="col"><h3 class="prev-next">{{prevExercise}}</h3></div>
-      <div class="col"><h3 class="prev-next">{{nextExercise}}</h3></div>
+    <div class="row centered">
+      <h3>
+        <div class="col prev-next">{{prevExercise}}</div>
+        <div class="col prev-next">{{nextExercise}}</div>
+      </h3>
     </div>
-    <div class="row centered padding-top padding-bottom cur-ex">
+    <div class="row centered">
       <div class="col"></div>
-      <h1 class="col col-75" ng-model="currentExercise.name" data-fittext>{{currentExercise.name}}</h1>
+      <h1 class="col col-75">{{currentExercise.name}}</h1>
       <div class="col"></div>
     </div>
-    <div class="row centered padding-top padding-bottom">
+    <div class="row centered">
       <div class="col col-10"></div>
       <div class="col col-80"><h1 class="timer">{{Math.floor(totalMilSecs/60000)}}:{{pad(Math.ceil(totalMilSecs%60000/1000))}}</h1></div>
       <div class="col col-10"></div>
