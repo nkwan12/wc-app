@@ -18,7 +18,13 @@
         </div>
       </ion-item>
     </ion-list>
-    <a href="#/app/workouts/{{workout.id}}/edit" class="button button-full button-assertive">Edit This Workout!</a>
-    <a href="#/app/workouts/{{workout.id}}/play" class="button button-full button-balanced">Play This Workout!</a>
+    <div class="row">
+      <div class="col col-50">
+        <a href="#/app/workouts/{{workout.id}}/edit" class="button button-block button-dark">Edit This Workout!</a>
+      </div>
+      <div class="col col-50">
+        <a href="#/app/workouts/{{workout.id}}/play" class="button button-block button-positive">Play This Workout!</a>
+      </div>
+    </div>
   </ion-content>
 </ion-view>

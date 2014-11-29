@@ -114,9 +114,8 @@ angular.module('wc.controllers', [])
 */
 })
 
-.controller("LoginCtrl", function($scope, $state, AuthenticationService, $stateParams) {
+.controller("LoginCtrl", function($scope, $state, AuthenticationService, $stateParams, $ionicLoading) {
   $scope.msg = "";
-  $scope.loadingClass = "hidden";
   
   $scope.user = {email: null, password: null};
 
@@ -127,7 +126,7 @@ angular.module('wc.controllers', [])
   };
 
   $scope.login = function() {
-    $scope.loadingClass = "";
+    $ionicLoading.show({templateUrl: "templates/loading.html"});
     AuthenticationService.login($scope.user);
   };
 
@@ -144,7 +143,7 @@ angular.module('wc.controllers', [])
       inherit: false,
       notify: true
     });
-    $scope.loadingClass = "hidden";
+    $ionicLoading.hide();
   });
 
   $scope.$on("event:auth-login-complete", function() {
@@ -152,7 +151,7 @@ angular.module('wc.controllers', [])
   });
 
   $scope.$on("event:auth-login-failed", function() {
-    $scope.loadingClass = "hidden";
+    $ionicLoading.hide();
     $scope.msg = "Wrong email or password, please try again...";
   });
 
@@ -162,10 +161,9 @@ angular.module('wc.controllers', [])
   };
 })
 
-.controller("SignUpCtrl", function($scope, AuthenticationService) {
+.controller("SignUpCtrl", function($scope, AuthenticationService, $ionicLoading) {
   $scope.newUser = {email: null, password: null, passwordConfirmation: null};
   $scope.msg = "";
-  $scope.loadingClass = "hidden";
   var wrongPasswordsMsg = "The passwords you entered do not match, please try again..."
   var emailInUseMsg = "An account with that email address already exists..."
   var invalidEmailMsg = "Please enter a valid email address..."
@@ -178,13 +176,13 @@ angular.module('wc.controllers', [])
     } else if (!(/([^@]+)@([^\.]+).(.+)$/.test($scope.newUser.email))) {
       $scope.msg = invalidEmailMsg;
     } else {
-      $scope.loadingClass = "";
+      $ionicLoading.show({templateUrl: "templates/loading.html"});
       AuthenticationService.newUser($scope.newUser);
     };
   };
 
   $scope.$on("event:auth-email-in-use", function() {
-    $scope.loadingClass = "hidden";
+    $ionicLoading.hide();
     $scope.newUser.email = null;
     $scope.newUser.password = null;
     $scope.newUser.passwordConfirmation = null;
@@ -192,7 +190,7 @@ angular.module('wc.controllers', [])
   });
 
   $scope.$on("event:auth-new-user-success", function() {
-    $scope.loadingClass = "hidden";
+    $ionicLoading.hide();
     $scope.signUpModal.hide();
     $scope.newUser.email = null;
     $scope.newUser.password = null;
@@ -201,15 +199,14 @@ angular.module('wc.controllers', [])
   });
 
   $scope.closeModal = function() {
-    $scope.loadingClass = "hidden";
+    $ionicLoading.hide();
     $scope.signUpModal.hide();
     $scope.newUser.email = null;
     $scope.newUser.password = null;
     $scope.newUser.passwordConfirmation = null;
   };
 })
-.controller("PasswordResetCtrl", function($scope, AuthenticationService, $ionicPopup) {
-  $scope.loadingClass = "hidden";
+.controller("PasswordResetCtrl", function($scope, AuthenticationService, $ionicPopup, $ionicLoading) {
   $scope.user = {email: null}
   var emailNotFoundMsg = "No account with that email address was found.";
   var successMsg = "Password email successfully sent.";
@@ -225,7 +222,7 @@ angular.module('wc.controllers', [])
   };
   $scope.$on("event:auth-password-reset-not-found", function() {
     $scope.msg = emailNotFoundMsg;
-    $scope.loadingClass = "hidden";
+    $ionicLoading.hide();
     $scope.user.email = null;
   });
   $scope.$on("event:auth-password-reset-success", function() {
@@ -236,16 +233,16 @@ angular.module('wc.controllers', [])
   });
   $scope.$on("event:auth-password-reset-failure", function() {
     $scope.msg = failureMsg;
-    $scope.loadingClass = "hidden";
+    $ionicLoading.hide();
     $scope.user.email = null;
   });
   $scope.closeModal = function() {
     $scope.forgotPasswordModal.hide();
     $scope.user.email = null;
-    $scope.loadingClass = "hidden";
+    $ionicLoading.hide();
   };
   $scope.resetPassword = function() {
-    $scope.loadingClass = "";
+    $ionicLoading.show({templateUrl: "templates/loading.html"});
     AuthenticationService.resetPassword($scope.user);
   };
 })
@@ -297,12 +294,14 @@ angular.module('wc.controllers', [])
     exercise: {name: "", cat: "Exercise", dur: { minutes: 0, seconds: 0 }},
     index: null,
     action: "create",
-    readOnly: false
+    readOnly: false,
+    title: "New Exercise"
   };
   $scope.workout = {name: "", private: null};
   $scope.exercises = [];
   $scope.createExercise = function() {
     $scope.newExercise.action = "create";
+    $scope.newExercise.title = "New Exercise";
     $scope.exerciseModal.show();
   };
 
@@ -312,6 +311,7 @@ angular.module('wc.controllers', [])
 
   $scope.editExercise = function(index) {
     $scope.newExercise.action = "edit";
+    $scope.newExercise.title = "Edit Exercise";
     $scope.newExercise.exercise = $scope.exercises[index];
     $scope.newExercise.index = index;
     $scope.exerciseModal.show();
@@ -372,12 +372,14 @@ angular.module('wc.controllers', [])
     exercise: {name: "", cat: "Exercise", dur: { minutes: 0, seconds: 0 }},
     index: null,
     action: "create",
-    readOnly: false
+    readOnly: false,
+    title: "New Exercise"
   };
   $scope.workout = {};
   $scope.exercises = [];
   $scope.createExercise = function() {
     $scope.newExercise.action = "create";
+    $scope.newExercise.title = "New Exercise";
     $scope.exerciseModal.show();
   };
 
@@ -388,6 +390,7 @@ angular.module('wc.controllers', [])
 
   $scope.editExercise = function(index) {
     $scope.newExercise.action = "edit";
+    $scope.newExercise.title = "Edit Exercise";
     $scope.newExercise.exercise = $scope.exercises[index];
     $scope.newExercise.index = index;
     $scope.exerciseModal.show();
@@ -475,6 +478,7 @@ angular.module('wc.controllers', [])
 
 .controller("PlayWorkoutCtrl", function($scope, $stateParams, $interval, Workout, $cordovaVibration, $insomnia) {
   $scope.workout = null;
+  $scope.currentExercise = null;
   var exerciseIndex = 0;
   var timer = null;
   $scope.startPause = "ion-play";
@@ -541,6 +545,7 @@ angular.module('wc.controllers', [])
   var decrement = function() {
     $scope.totalMilSecs -= 1000;
     if ($scope.totalMilSecs <= 0) {
+      $cordovaVibration.vibrate([100,100,100,100,100]); //disable this line for testing on computer
       nextExercise();
     };
   };
@@ -549,8 +554,8 @@ angular.module('wc.controllers', [])
     if ($scope.workout.exercises[++exerciseIndex]) {
       $scope.currentExercise = $scope.workout.exercises[exerciseIndex];
       $scope.totalMilSecs = $scope.currentExercise.dur * 1000;
-      $cordovaVibration.vibrate([100,100,100,100,100]); //disable this line for testing on computer
     } else {
+      --exerciseIndex;
       $interval.cancel(timer);
       endWorkout();
     }
