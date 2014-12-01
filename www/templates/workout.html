@@ -3,13 +3,10 @@
     <button menu-toggle="right" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
   <ion-content class="has-header">
-    <ion-list>
-      <ion-item ng-repeat="exercise in workout.exercises" class="small-list">
+    <ion-list class="workout">
+      <ion-item ng-repeat="exercise in workout.exercises" class="small-list" ng-class="{{exercise.cat.toLowerCase() + 'Class'}}">
         <div class="row">
-          <div class="col col-25">
-            <p>{{exercise.cat}}</p>
-          </div>
-          <div class="col col-50">
+          <div class="col col-75">
             <p>{{exercise.name}}</p>
           </div>
           <div class="col col-25">

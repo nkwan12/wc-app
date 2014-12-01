@@ -269,6 +269,8 @@ angular.module('wc.controllers', [])
 })
 
 .controller('WorkoutCtrl', function($scope, $stateParams, Workout) {
+  $scope.exerciseClass = "exercise-list";
+  $scope.restClass = "rest-list";
   Workout.get($stateParams.workoutId).then(function(data) {
     $scope.workout = data.workout;
     $scope.workout.exercises = data.exercises;
@@ -277,6 +279,8 @@ angular.module('wc.controllers', [])
 })
 
 .controller("NewWorkoutCtrl", function($scope, $ionicModal, $state, Workout, Global) {
+  $scope.exerciseClass = "exercise-list";
+  $scope.restClass = "rest-list";
   $scope.title = "New Workout";
   $ionicModal.fromTemplateUrl('templates/workouts/exercise.html', function(modal) {
     $scope.exerciseModal = modal;
@@ -355,6 +359,8 @@ angular.module('wc.controllers', [])
 })
 
 .controller("EditWorkoutCtrl", function($scope, $state, $ionicModal, $stateParams, Workout, Global) {
+  $scope.exerciseClass = "exercise-list";
+  $scope.restClass = "rest-list";
   $scope.title = "Edit Workout";
   $scope.workout = null;
   $scope.exercises = [];
@@ -398,7 +404,7 @@ angular.module('wc.controllers', [])
 
   $scope.mvExercise = function(index, change) {
     var newIndex = index + change;
-    if (!((newIndex < 0) || (newIndex > $scope.exercises.length))) {
+    if (!((newIndex < 0) || (newIndex > ($scope.exercises.length - 1)))) {
       var temp = $scope.exercises[newIndex];
       $scope.exercises[newIndex] = $scope.exercises[index];
       $scope.exercises[index] = temp;
