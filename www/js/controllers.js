@@ -282,6 +282,8 @@ angular.module('wc.controllers', [])
   $scope.exerciseClass = "exercise-list";
   $scope.restClass = "rest-list";
   $scope.title = "New Workout";
+  $scope.showDelete = false;
+  $scope.showReorder = false;
   $ionicModal.fromTemplateUrl('templates/workouts/exercise.html', function(modal) {
     $scope.exerciseModal = modal;
     },
@@ -301,7 +303,7 @@ angular.module('wc.controllers', [])
     readOnly: false,
     title: "New Exercise"
   };
-  $scope.workout = {name: "", private: null};
+  $scope.workout = {name: "", private: null, rounds: 1};
   $scope.exercises = [];
   $scope.createExercise = function() {
     $scope.newExercise.action = "create";
@@ -321,15 +323,10 @@ angular.module('wc.controllers', [])
     $scope.exerciseModal.show();
   };
 
-  $scope.mvExercise = function(index, change) {
-    var newIndex = index + change;
-    if (!((newIndex < 0) || (newIndex > ($scope.exercises.length -1)))) {
-      console.log("New Index: " + newIndex);
-      console.log("Length: " + $scope.exercises.length);
-      var temp = $scope.exercises[newIndex];
-      $scope.exercises[newIndex] = $scope.exercises[index];
-      $scope.exercises[index] = temp;
-    };
+  $scope.mvExercise = function(fromI, toI) {
+    var temp = $scope.exercises[fromI-1];
+    $scope.exercises.splice(fromI-1, 1);
+    $scope.exercises.splice(toI-1, 0, temp);
   };
 
   $scope.submit = function() {
@@ -362,6 +359,8 @@ angular.module('wc.controllers', [])
   $scope.exerciseClass = "exercise-list";
   $scope.restClass = "rest-list";
   $scope.title = "Edit Workout";
+  $scope.showDelete = false;
+  $scope.showReorder = false;
   $scope.workout = null;
   $scope.exercises = [];
   var emptyMsg = "No exercises in this workout yet!"
@@ -402,13 +401,10 @@ angular.module('wc.controllers', [])
     $scope.exerciseModal.show();
   };
 
-  $scope.mvExercise = function(index, change) {
-    var newIndex = index + change;
-    if (!((newIndex < 0) || (newIndex > ($scope.exercises.length - 1)))) {
-      var temp = $scope.exercises[newIndex];
-      $scope.exercises[newIndex] = $scope.exercises[index];
-      $scope.exercises[index] = temp;
-    }
+  $scope.mvExercise = function(fromI, toI) {
+    var temp = $scope.exercises[fromI-1];
+    $scope.exercises.splice(fromI-1, 1);
+    $scope.exercises.splice(toI-1, 0, temp);
   };
   $scope.checkMsg = function() {
     if ($scope.exercises.length == 0) {
@@ -485,6 +481,7 @@ angular.module('wc.controllers', [])
 .controller("PlayWorkoutCtrl", function($scope, $stateParams, $interval, Workout, $cordovaVibration, $insomnia) {
   $scope.workout = null;
   $scope.currentExercise = null;
+  $scope.currentRound = 1;
   var exerciseIndex = 0;
   var timer = null;
   $scope.startPause = "ion-play";
@@ -496,6 +493,7 @@ angular.module('wc.controllers', [])
 
   $scope.workout = Workout.get($stateParams.workoutId).then(function(data, status, headers, config) {
     $scope.workout = data.workout;
+    console.log("Rounds: " + data.workout.rounds);
     $scope.workout.exercises = data.exercises;
     $scope.Math = window.Math;
     $scope.totalMilSecs = $scope.workout.exercises[0].dur * 1000;
@@ -507,11 +505,15 @@ angular.module('wc.controllers', [])
   var setPrevNext = function() {
     if ($scope.workout.exercises[exerciseIndex - 1]) {
       $scope.prevExercise = $scope.workout.exercises[exerciseIndex - 1].name;
+    } else if ($scope.currentRound > 1) {
+      $scope.prevExercise = $scope.workout.exercises[$scope.workout.exercises.length - 1].name;
     } else {
       $scope.prevExercise = "Start";
     }
     if ($scope.workout.exercises[exerciseIndex + 1]) {
       $scope.nextExercise = $scope.workout.exercises[exerciseIndex + 1].name;
+    } else if ($scope.currentRound < $scope.workout.rounds) {
+      $scope.nextExercise = $scope.workout.exercises[0].name;
     } else {
       $scope.nextExercise = "End";
     }
@@ -519,7 +521,7 @@ angular.module('wc.controllers', [])
 
   $scope.startTimer = function() {
     timer = $interval(decrement, 1000);
-    $insomnia.keepAwake(); //disable for computer testing
+    //$insomnia.keepAwake(); //disable for computer testing
     if ($scope.currentExercise.cat == "Exercise") {
       $scope.bgColor = "red";
     } else {
@@ -531,7 +533,7 @@ angular.module('wc.controllers', [])
 
   $scope.pauseTimer = function() {
     $interval.cancel(timer);
-    $insomnia.allowSleepAgain(); //disable for computer testing
+    //$insomnia.allowSleepAgain(); //disable for computer testing
     timer = null;
     $scope.bgColor = "blue";
     $scope.startPause = "ion-play";
@@ -551,13 +553,19 @@ angular.module('wc.controllers', [])
   var decrement = function() {
     $scope.totalMilSecs -= 1000;
     if ($scope.totalMilSecs <= 0) {
-      $cordovaVibration.vibrate([100,100,100,100,100]); //disable this line for testing on computer
+//      $cordovaVibration.vibrate([100,100,100,100,100]); //disable this line for testing on computer
       nextExercise();
     };
   };
 
   var nextExercise = function() {
     if ($scope.workout.exercises[++exerciseIndex]) {
+      $scope.currentExercise = $scope.workout.exercises[exerciseIndex];
+      $scope.totalMilSecs = $scope.currentExercise.dur * 1000;
+    } else if ($scope.currentRound < $scope.workout.rounds) {
+      console.log("End of round, going to next round!");
+      exerciseIndex = 0;
+      ++$scope.currentRound;
       $scope.currentExercise = $scope.workout.exercises[exerciseIndex];
       $scope.totalMilSecs = $scope.currentExercise.dur * 1000;
     } else {
@@ -578,6 +586,11 @@ angular.module('wc.controllers', [])
   var prevExercise = function() {
     if ($scope.workout.exercises[exerciseIndex - 1]) {
       exerciseIndex--;
+      $scope.currentExercise = $scope.workout.exercises[exerciseIndex];
+      $scope.totalMilSecs = $scope.currentExercise.dur * 1000;
+    } else if ($scope.currentRound > 1) {
+      exerciseIndex = $scope.workout.exercises.length - 1;
+      --$scope.currentRound;
       $scope.currentExercise = $scope.workout.exercises[exerciseIndex];
       $scope.totalMilSecs = $scope.currentExercise.dur * 1000;
     } else {

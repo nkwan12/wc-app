@@ -7,21 +7,30 @@
       <label class="item item-input">
         <input type="text" ng-model="workout.name" placeholder="Enter Workout Name...">
       </label>
-      <ion-list class="workout">
+      <button class="button button-icon icon ion-minus-circled" ng-click="showDelete = !showDelete; showReorder = false"></button>
+      <button class="button button-icon icon ion-arrow-move" ng-click="showReorder = !showReorder; showDelete = false"></button>
+      <ion-list class="workout" show-delete="showDelete" show-reorder="showReorder">
         <ion-item class="item-divider assertive">{{msg}}</ion-item>
-        <ion-item ng-repeat="exercise in exercises" class="small-list" ng-click="editExercise($index)" ng-class="{{exercise.cat.toLowerCase() + 'Class'}}">
+        <ion-item ng-repeat="exercise in exercises" class="small-list padding-right padding-left" ng-click="editExercise($index)" ng-class="{{exercise.cat.toLowerCase() + 'Class'}}">
           <div class="row">
+            <ion-delete-button class="ion-minus-circled" ng-click="$event.stopPropagation(); rmExercise($index)">
+            </ion-delete-button>
             <div class="col">
               <p>{{exercise.name}}</p>
             </div>
-            <div class="col col-20">
+            <div class="col">
               <p>{{exercise.dur.minutes}}:{{pad(exercise.dur.seconds)}}</p>
             </div>
-            <div class="col col-33">
-              <button class="button button-royal button-small icon ion-arrow-up-b" ng-click="$event.stopPropagation(); mvExercise($index, -1)"></button>
-              <button class="button button-royal button-small icon ion-arrow-down-b" ng-click="$event.stopPropagation(); mvExercise($index, 1)"></button>
-              <button class="button button-assertive button-small icon ion-trash-a" ng-click="$event.stopPropagation(); rmExercise($index)"></button>
-            </div>
+            <ion-reorder-button class="ion-arrow-move" on-reorder="mvExercise($fromIndex, $toIndex)">
+            </ion-reorder-button>
+          </div>
+        </ion-item>
+        <ion-item class="small-list">
+          <div class="row">
+            <label class="item item-input">
+              <span class="input-label">Rounds</span>
+              <input type="number" min="1" ng-model="workout.rounds" select-on-click>
+            </label>
           </div>
         </ion-item>
       </ion-list>
