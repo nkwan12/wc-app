@@ -5,10 +5,11 @@
   <ion-content class="has-header">
     <form>
       <label class="item item-input">
+        <span class="input-label">Workout Name:</span>
         <input type="text" ng-model="workout.name" placeholder="Enter Workout Name...">
       </label>
       <button class="button button-icon icon ion-minus-circled" ng-click="showDelete = !showDelete; showReorder = false"></button>
-      <button class="button button-icon icon ion-arrow-move" ng-click="showReorder = !showReorder; showDelete = false"></button>
+      <button class="button button-icon icon ion-arrow-move stick-right" ng-click="showReorder = !showReorder; showDelete = false"></button>
       <ion-list class="workout" show-delete="showDelete" show-reorder="showReorder">
         <ion-item class="item-divider assertive">{{msg}}</ion-item>
         <ion-item ng-repeat="exercise in exercises" class="small-list padding-right padding-left" ng-click="editExercise($index)" ng-class="{{exercise.cat.toLowerCase() + 'Class'}}">
@@ -28,7 +29,7 @@
         <ion-item class="small-list">
           <div class="row">
             <label class="item item-input">
-              <span class="input-label">Rounds</span>
+              <span class="input-label">Rounds:</span>
               <input type="number" min="1" ng-model="workout.rounds" select-on-click>
             </label>
           </div>

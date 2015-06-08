@@ -319,6 +319,9 @@ angular.module('wc.controllers', [])
     $scope.newExercise.action = "edit";
     $scope.newExercise.title = "Edit Exercise";
     $scope.newExercise.exercise = $scope.exercises[index];
+    if ($scope.newExercise.exercise.cat == "Rest") {
+      $scope.newExercise.readOnly = true;
+    };
     $scope.newExercise.index = index;
     $scope.exerciseModal.show();
   };
@@ -397,6 +400,9 @@ angular.module('wc.controllers', [])
     $scope.newExercise.action = "edit";
     $scope.newExercise.title = "Edit Exercise";
     $scope.newExercise.exercise = $scope.exercises[index];
+    if ($scope.newExercise.exercise.cat == "Rest") {
+      $scope.newExercise.readOnly = true;
+    };
     $scope.newExercise.index = index;
     $scope.exerciseModal.show();
   };
@@ -521,7 +527,7 @@ angular.module('wc.controllers', [])
 
   $scope.startTimer = function() {
     timer = $interval(decrement, 1000);
-    //$insomnia.keepAwake(); //disable for computer testing
+    $insomnia.keepAwake(); //disable for computer testing
     if ($scope.currentExercise.cat == "Exercise") {
       $scope.bgColor = "red";
     } else {
@@ -533,7 +539,7 @@ angular.module('wc.controllers', [])
 
   $scope.pauseTimer = function() {
     $interval.cancel(timer);
-    //$insomnia.allowSleepAgain(); //disable for computer testing
+    $insomnia.allowSleepAgain(); //disable for computer testing
     timer = null;
     $scope.bgColor = "blue";
     $scope.startPause = "ion-play";
@@ -553,7 +559,7 @@ angular.module('wc.controllers', [])
   var decrement = function() {
     $scope.totalMilSecs -= 1000;
     if ($scope.totalMilSecs <= 0) {
-//      $cordovaVibration.vibrate([100,100,100,100,100]); //disable this line for testing on computer
+      $cordovaVibration.vibrate([100,100,100,100,100]); //disable this line for testing on computer
       nextExercise();
     };
   };

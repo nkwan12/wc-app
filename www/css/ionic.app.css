@@ -89,6 +89,11 @@ h1.timer {
 .workout .item p {
   color: #333333; }
 
+.stick-right {
+  position: absolute !important;
+  right: 0;
+}
+
 /*!
   Ionicons, v1.5.2
   Created by Ben Sperry for the Ionic Framework, http://ionicons.com/
